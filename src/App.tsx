@@ -273,7 +273,7 @@ const SaleBanner = ({ onViewSale, onHide }: { onViewSale: () => void; onHide: ()
     <div className="bg-neutral-900 text-white text-center py-3 px-6 flex items-center justify-center gap-4 relative z-40">
       <p className="text-xs uppercase tracking-widest font-medium">
         <span className="text-[#b8976a] mr-2">SALE</span>
-        Up to 30% off selected products —{' '}
+        Up to 60% off selected products —{' '}
         <button onClick={onViewSale} className="underline underline-offset-2 hover:opacity-70 transition-opacity">Shop now</button>
         <span className="mx-3 text-neutral-600">·</span>
         Free Shipping Worldwide
@@ -1050,7 +1050,7 @@ const SalePage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectPro
         <div className="mb-16">
           <p className="text-xs uppercase tracking-[0.3em] font-medium text-[#b8976a] mb-3">Limited Time</p>
           <h1 className="text-5xl md:text-6xl font-serif mb-4">Sale</h1>
-          <p className="text-neutral-500">Up to 30% off selected products. While stocks last.</p>
+          <p className="text-neutral-500">Up to 60% off selected products. While stocks last.</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {saleProducts.map((product, idx) => {
