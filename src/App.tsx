@@ -474,23 +474,21 @@ const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void
   const product = PRODUCTS.find(p => p.id === '1')!;
   const salePrice = getSalePrice(product)!;
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <section className="py-12 bg-white">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="flex flex-col sm:flex-row gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative"
+            className="relative w-48 shrink-0 cursor-pointer"
+            onClick={() => onSelectProduct('1')}
           >
-            <div className="aspect-square rounded-[48px] overflow-hidden bg-beige-100 flex items-center justify-center p-12 cursor-pointer" onClick={() => onSelectProduct('1')}>
+            <div className="aspect-square rounded-[32px] overflow-hidden bg-beige-100 flex items-center justify-center p-6">
               <img src="/products/glazing-milk.png" alt="Glazing Milk" className="w-full h-full object-contain hover:scale-105 transition-transform duration-700" />
             </div>
-            <div className="absolute top-6 left-6 bg-neutral-900 text-white text-[10px] uppercase tracking-widest font-bold px-3 py-2 rounded-full">
+            <div className="absolute top-3 left-3 bg-neutral-900 text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded-full">
               #1 Best Seller
-            </div>
-            <div className="absolute top-6 right-6 bg-[#b8976a] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-2 rounded-full">
-              -{getDisplayDiscount(product)}% Off
             </div>
           </motion.div>
 
@@ -498,21 +496,22 @@ const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="space-y-3"
           >
             <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400">Our Hero Product</p>
-            <h2 className="text-4xl md:text-5xl font-serif leading-tight">Glazing Milk</h2>
-            <div className="flex items-center gap-3">
+            <h2 className="text-3xl font-serif">Glazing Milk</h2>
+            <div className="flex items-center gap-2">
               <StarRating rating={4.9} />
               <span className="text-sm text-neutral-500">4.9 · 76 reviews</span>
             </div>
-            <div className="flex items-baseline gap-3 pt-2">
-              <span className="text-3xl font-light">£{salePrice.toFixed(2)}</span>
-              <span className="text-lg text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-light">£{salePrice.toFixed(2)}</span>
+              <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+              <span className="text-xs font-bold bg-[#b8976a] text-white px-2 py-0.5 rounded-full">-{getDisplayDiscount(product)}%</span>
             </div>
             <button
               onClick={() => onSelectProduct('1')}
-              className="mt-2 w-full py-4 rounded-full text-xs uppercase tracking-widest font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
+              className="px-8 py-3 rounded-full text-xs uppercase tracking-widest font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
             >
               Shop Now
             </button>
