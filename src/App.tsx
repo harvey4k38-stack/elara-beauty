@@ -59,7 +59,7 @@ const SALE_DISCOUNTS: Record<string, number> = {
 };
 
 const SALE_PRICE_OVERRIDES: Record<string, number> = {
-  '1': 12.99,
+  '1': 12.79,
 };
 
 const getSalePrice = (product: { id: string; price: number }) => {
