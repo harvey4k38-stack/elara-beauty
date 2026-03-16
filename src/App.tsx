@@ -471,15 +471,8 @@ const Hero = ({ onShopNow }: { onShopNow: () => void }) => (
 );
 
 const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void }) => {
-  const { add } = useCart();
   const product = PRODUCTS.find(p => p.id === '1')!;
   const salePrice = getSalePrice(product)!;
-  const [added, setAdded] = useState(false);
-  const handleAdd = () => {
-    add(product, salePrice);
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  };
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -513,30 +506,16 @@ const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void
               <StarRating rating={4.9} />
               <span className="text-sm text-neutral-500">4.9 · 76 reviews</span>
             </div>
-            <p className="text-neutral-600 leading-relaxed text-lg">
-              The product that started it all. Our Glazing Milk delivers an intense wave of hydration that leaves skin looking lit-from-within — silky, bouncy, and effortlessly glowing.
-            </p>
-            <p className="text-neutral-500 leading-relaxed">
-              Loved by thousands of customers worldwide, it's the last moisturising essence you'll ever need. Lightweight enough to layer, powerful enough to transform.
-            </p>
             <div className="flex items-baseline gap-3 pt-2">
               <span className="text-3xl font-light">£{salePrice.toFixed(2)}</span>
               <span className="text-lg text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
             </div>
-            <div className="flex gap-4 pt-2">
-              <button
-                onClick={handleAdd}
-                className={`flex-1 py-4 rounded-full text-xs uppercase tracking-widest font-medium transition-colors ${added ? 'bg-[#b8976a] text-white' : 'bg-neutral-900 text-white hover:bg-neutral-800'}`}
-              >
-                {added ? 'Added to Bag ✓' : 'Add to Bag'}
-              </button>
-              <button
-                onClick={() => onSelectProduct('1')}
-                className="px-6 py-4 rounded-full text-xs uppercase tracking-widest font-medium border border-neutral-200 hover:border-neutral-400 transition-colors"
-              >
-                View
-              </button>
-            </div>
+            <button
+              onClick={() => onSelectProduct('1')}
+              className="mt-2 w-full py-4 rounded-full text-xs uppercase tracking-widest font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
+            >
+              Shop Now
+            </button>
           </motion.div>
         </div>
       </div>
