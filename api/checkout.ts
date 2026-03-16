@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
 
 const stripe = new Stripe((process.env.STRIPE_SECRET_KEY || '').trim());
-const APP_URL = process.env.APP_URL!;
+const APP_URL = (process.env.APP_URL || 'https://www.elarabeauty.me').trim().replace(/\/$/, '');
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
