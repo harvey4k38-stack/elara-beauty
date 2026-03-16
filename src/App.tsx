@@ -91,11 +91,16 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ items }),
       });
-      const data = await res.json();
+      const text = await res.text();
+      let data: any;
+      try { data = JSON.parse(text); } catch {
+        setError(`Error ${res.status}: ${text.slice(0, 120)}`);
+        setLoading(false); return;
+      }
       if (data.url) { window.location.href = data.url; }
-      else { setError(data.error || 'Something went wrong. Please try again.'); setLoading(false); }
-    } catch {
-      setError('Something went wrong. Please try again.'); setLoading(false);
+      else { setError(data.error || `Error ${res.status}`); setLoading(false); }
+    } catch (e: any) {
+      setError(e.message || 'Network error'); setLoading(false);
     }
   };
 
