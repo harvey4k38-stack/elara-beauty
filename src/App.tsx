@@ -265,6 +265,8 @@ const SaleBanner = ({ onViewSale, onHide }: { onViewSale: () => void; onHide: ()
         <span className="text-[#b8976a] mr-2">SALE</span>
         Up to 30% off selected products —{' '}
         <button onClick={onViewSale} className="underline underline-offset-2 hover:opacity-70 transition-opacity">Shop now</button>
+        <span className="mx-3 text-neutral-600">·</span>
+        Free Shipping Worldwide
       </p>
       <button onClick={onHide} className="absolute right-4 hover:opacity-50 transition-opacity">
         <X className="w-4 h-4" />
