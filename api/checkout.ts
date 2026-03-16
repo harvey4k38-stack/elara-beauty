@@ -33,8 +33,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       cancel_url: `${APP_URL}?checkout=cancelled`,
     });
     return res.json({ url: session.url });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    return res.status(500).json({ error: 'Failed to create checkout session' });
+    return res.status(500).json({ error: err?.message || 'Failed to create checkout session' });
   }
 }
