@@ -1164,12 +1164,11 @@ const AboutPage = ({ onBack }: { onBack: () => void }) => (
 
       {/* Mission */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24 items-center">
-        <div className="aspect-[4/3] rounded-[40px] overflow-hidden bg-beige-100">
+        <div className="aspect-[4/3] rounded-[40px] overflow-hidden bg-beige-100 flex items-center justify-center p-8">
           <img
-            src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=1000"
-            alt="Elara Beauty"
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
+            src="/products/glazing-milk.png"
+            alt="Glazing Milk"
+            className="w-full h-full object-contain"
           />
         </div>
         <div className="space-y-6">
