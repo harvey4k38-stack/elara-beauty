@@ -30,7 +30,13 @@ const CartContext = createContext<CartContextType>({} as CartContextType);
 const useCart = () => useContext(CartContext);
 
 const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    try { return JSON.parse(localStorage.getItem('elara-cart') || '[]'); } catch { return []; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('elara-cart', JSON.stringify(items));
+  }, [items]);
   const add = (product: Product, price: number) => {
     setItems(prev => {
       const existing = prev.find(i => i.id === product.id);
