@@ -470,6 +470,80 @@ const Hero = ({ onShopNow }: { onShopNow: () => void }) => (
   </section>
 );
 
+const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void }) => {
+  const { add } = useCart();
+  const product = PRODUCTS.find(p => p.id === '1')!;
+  const salePrice = getSalePrice(product)!;
+  const [added, setAdded] = useState(false);
+  const handleAdd = () => {
+    add(product, salePrice);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+  return (
+    <section className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="aspect-square rounded-[48px] overflow-hidden bg-beige-100 flex items-center justify-center p-12 cursor-pointer" onClick={() => onSelectProduct('1')}>
+              <img src="/products/glazing-milk.png" alt="Glazing Milk" className="w-full h-full object-contain hover:scale-105 transition-transform duration-700" />
+            </div>
+            <div className="absolute top-6 left-6 bg-neutral-900 text-white text-[10px] uppercase tracking-widest font-bold px-3 py-2 rounded-full">
+              #1 Best Seller
+            </div>
+            <div className="absolute top-6 right-6 bg-[#b8976a] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-2 rounded-full">
+              -{getDisplayDiscount(product)}% Off
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400">Our Hero Product</p>
+            <h2 className="text-4xl md:text-5xl font-serif leading-tight">Glazing Milk</h2>
+            <div className="flex items-center gap-3">
+              <StarRating rating={4.9} />
+              <span className="text-sm text-neutral-500">4.9 · Over 2,000 five-star reviews</span>
+            </div>
+            <p className="text-neutral-600 leading-relaxed text-lg">
+              The product that started it all. Our Glazing Milk delivers an intense wave of hydration that leaves skin looking lit-from-within — silky, bouncy, and effortlessly glowing.
+            </p>
+            <p className="text-neutral-500 leading-relaxed">
+              Loved by thousands of customers worldwide, it's the last moisturising essence you'll ever need. Lightweight enough to layer, powerful enough to transform.
+            </p>
+            <div className="flex items-baseline gap-3 pt-2">
+              <span className="text-3xl font-light">£{salePrice.toFixed(2)}</span>
+              <span className="text-lg text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+            </div>
+            <div className="flex gap-4 pt-2">
+              <button
+                onClick={handleAdd}
+                className={`flex-1 py-4 rounded-full text-xs uppercase tracking-widest font-medium transition-colors ${added ? 'bg-[#b8976a] text-white' : 'bg-neutral-900 text-white hover:bg-neutral-800'}`}
+              >
+                {added ? 'Added to Bag ✓' : 'Add to Bag'}
+              </button>
+              <button
+                onClick={() => onSelectProduct('1')}
+                className="px-6 py-4 rounded-full text-xs uppercase tracking-widest font-medium border border-neutral-200 hover:border-neutral-400 transition-colors"
+              >
+                View
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const SkinConcerns = ({ onSelectConcern }: { onSelectConcern: (id: string) => void }) => (
   <section id="concerns" className="py-24 bg-beige-50">
     <div className="max-w-7xl mx-auto px-6">
@@ -1476,6 +1550,7 @@ function AppInner() {
       ) : (
         <main>
           <Hero onShopNow={handleShowAllProducts} />
+          <BestSeller onSelectProduct={(id) => { setActiveProductId(id); window.scrollTo({ top: 0 }); }} />
           <SkinConcerns onSelectConcern={setActiveConcernId} />
           <Routine />
           <Reviews />
