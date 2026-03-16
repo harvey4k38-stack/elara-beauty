@@ -93,7 +93,7 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
       });
       const data = await res.json();
       if (data.url) { window.location.href = data.url; }
-      else { setError('Something went wrong. Please try again.'); setLoading(false); }
+      else { setError(data.error || 'Something went wrong. Please try again.'); setLoading(false); }
     } catch {
       setError('Something went wrong. Please try again.'); setLoading(false);
     }
@@ -557,7 +557,7 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div className="aspect-[3/4] rounded-[40px] overflow-hidden bg-beige-100 sticky top-8">
+          <div className="aspect-[3/4] rounded-[40px] overflow-hidden bg-beige-100">
             <img
               src={product.image}
               alt={product.name}
