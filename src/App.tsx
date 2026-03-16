@@ -69,6 +69,13 @@ const getSalePrice = (product: { id: string; price: number }) => {
   return +(product.price * (1 - discount / 100)).toFixed(2);
 };
 
+const getDisplayDiscount = (product: { id: string; price: number }) => {
+  if (SALE_PRICE_OVERRIDES[product.id] !== undefined) {
+    return Math.round((1 - SALE_PRICE_OVERRIDES[product.id] / product.price) * 100);
+  }
+  return SALE_DISCOUNTS[product.id] ?? null;
+};
+
 // --- Components ---
 
 const CartDrawer = ({ onClose }: { onClose: () => void }) => {
@@ -374,7 +381,7 @@ const AllProductsPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSe
                   <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" referrerPolicy="no-referrer" />
                   {salePrice && (
                     <div className="absolute top-3 left-3 bg-neutral-900 text-white text-[10px] uppercase tracking-widest font-bold px-2.5 py-1.5 rounded-full">
-                      -{SALE_DISCOUNTS[product.id]}%
+                      -{getDisplayDiscount(product)}%
                     </div>
                   )}
                   <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm py-3 rounded-2xl text-[10px] uppercase tracking-widest font-bold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 text-center">
@@ -527,7 +534,7 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
   const desc = DESCRIPTIONS[product.id];
   const { rating, count } = getProductRating(product.id);
   const salePrice = getSalePrice(product);
-  const discount = SALE_DISCOUNTS[product.id];
+  const discount = getDisplayDiscount(product);
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   const handleAdd = () => {
@@ -972,7 +979,7 @@ const SalePage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectPro
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {saleProducts.map((product, idx) => {
             const salePrice = getSalePrice(product)!;
-            const discount = SALE_DISCOUNTS[product.id];
+            const discount = getDisplayDiscount(product);
             return (
               <motion.div
                 key={product.id}
