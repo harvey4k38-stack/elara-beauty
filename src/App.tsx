@@ -734,18 +734,21 @@ const Reviews = () => (
       </div>
 
       <div className="flex flex-wrap justify-center gap-12">
-        {[1, 2, 3].map((i) => (
-          <motion.div 
+        {[
+          { quote: "The Glazing Milk is a game changer. My skin feels hydrated all day without feeling heavy or greasy.", author: "Emma W." },
+          { quote: "I've tried so many eye creams and nothing compares to the Caffeine Eye Serum. The puffiness was gone within a week.", author: "Isabelle R." },
+          { quote: "The Barrier Restore Cream completely transformed my skin. My redness has calmed down and my complexion looks so even now.", author: "Sophie M." },
+        ].map((review, i) => (
+          <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
             className="max-w-sm text-center"
           >
-            <p className="text-xl font-serif leading-relaxed mb-6">
-              "The Glazing Milk is a game changer. My skin feels hydrated all day without feeling heavy or greasy."
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.2em] font-bold">Emma W. — Verified Buyer</p>
+            <p className="text-xl font-serif leading-relaxed mb-6">"{review.quote}"</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] font-bold">{review.author} — Verified Buyer</p>
           </motion.div>
         ))}
       </div>
