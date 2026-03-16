@@ -273,7 +273,7 @@ const SaleBanner = ({ onViewSale, onHide }: { onViewSale: () => void; onHide: ()
   );
 };
 
-const Navbar = ({ onHome, onSelectConcern, onShowSale }: { onHome: () => void; onSelectConcern: (id: string) => void; onShowSale: () => void }) => {
+const Navbar = ({ onHome, onSelectConcern, onShowSale, onShowAbout }: { onHome: () => void; onSelectConcern: (id: string) => void; onShowSale: () => void; onShowAbout: () => void }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -287,6 +287,7 @@ const Navbar = ({ onHome, onSelectConcern, onShowSale }: { onHome: () => void; o
             <a href="#" className="hover:opacity-50 transition-opacity">Shop</a>
             <a href="#concerns" className="hover:opacity-50 transition-opacity">Skin Concerns</a>
             <button onClick={onShowSale} className="text-[#b8976a] hover:opacity-70 transition-opacity font-bold">Sale</button>
+            <button onClick={onShowAbout} className="hover:opacity-50 transition-opacity">About</button>
           </div>
 
           <div className="md:hidden">
@@ -329,7 +330,7 @@ const Navbar = ({ onHome, onSelectConcern, onShowSale }: { onHome: () => void; o
                 <a href="#" onClick={() => setIsMobileMenuOpen(false)}>Shop All</a>
                 <a href="#concerns" onClick={() => setIsMobileMenuOpen(false)}>Skin Concerns</a>
                 <button onClick={() => { onShowSale(); setIsMobileMenuOpen(false); }} className="text-left text-[#b8976a] font-bold">Sale</button>
-                <a href="#" onClick={() => setIsMobileMenuOpen(false)}>About Us</a>
+                <button onClick={() => { onShowAbout(); setIsMobileMenuOpen(false); }} className="text-left">About Us</button>
               </div>
             </motion.div>
           )}
@@ -1143,6 +1144,77 @@ const CookieBanner = ({ onAccept, onManage }: { onAccept: () => void; onManage: 
   </motion.div>
 );
 
+const AboutPage = ({ onBack }: { onBack: () => void }) => (
+  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen bg-white">
+    <div className="max-w-7xl mx-auto px-6 pt-12 pb-24">
+      <button onClick={onBack} className="flex items-center gap-2 text-xs uppercase tracking-widest font-medium mb-16 hover:opacity-50 transition-opacity">
+        <ArrowLeft className="w-4 h-4" /> Back
+      </button>
+
+      {/* Hero */}
+      <div className="max-w-3xl mb-24">
+        <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400 mb-4">Our Story</p>
+        <h1 className="text-5xl md:text-7xl font-serif leading-[1.1] mb-8">
+          Beauty rooted<br />in science.
+        </h1>
+        <p className="text-lg text-neutral-600 leading-relaxed max-w-xl">
+          Elara Beauty was born from a simple frustration — the skincare industry had become overcomplicated, overpriced, and full of empty promises. We set out to change that.
+        </p>
+      </div>
+
+      {/* Mission */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24 items-center">
+        <div className="aspect-[4/3] rounded-[40px] overflow-hidden bg-beige-100">
+          <img
+            src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&q=80&w=1000"
+            alt="Elara Beauty"
+            className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        <div className="space-y-6">
+          <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400">What We Stand For</p>
+          <h2 className="text-4xl font-serif leading-tight">Less product.<br />More results.</h2>
+          <p className="text-neutral-600 leading-relaxed">
+            Every product in our range is developed with dermatologists and backed by clinical research. We believe in transparency — no unnecessary fillers, no misleading claims, no compromises.
+          </p>
+          <p className="text-neutral-600 leading-relaxed">
+            Our philosophy is simple: give your skin exactly what it needs, in the right concentrations, at an honest price.
+          </p>
+        </div>
+      </div>
+
+      {/* Values */}
+      <div className="mb-24">
+        <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400 mb-12 text-center">Our Values</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { title: 'Science First', desc: 'Every formula is developed with dermatologists and tested to deliver real, measurable results. We don\'t launch a product until the science backs it.' },
+            { title: 'Radical Honesty', desc: 'We tell you exactly what each product does and why. No vague claims, no marketing fluff — just clear, honest communication about what you\'re putting on your skin.' },
+            { title: 'Cruelty Free', desc: 'We are 100% cruelty-free and dermatologically tested. We believe great skincare should never come at the cost of animal welfare.' },
+          ].map(v => (
+            <div key={v.title} className="bg-beige-50 rounded-[32px] p-8">
+              <h3 className="text-xl font-serif mb-4">{v.title}</h3>
+              <p className="text-sm text-neutral-600 leading-relaxed">{v.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Promise */}
+      <div className="bg-neutral-900 text-white rounded-[40px] px-10 py-16 text-center max-w-3xl mx-auto">
+        <p className="text-xs uppercase tracking-[0.3em] font-medium text-[#b8976a] mb-6">Our Promise</p>
+        <h2 className="text-3xl md:text-4xl font-serif leading-snug mb-6">
+          "If it doesn't work for you, we'll make it right."
+        </h2>
+        <p className="text-neutral-400 text-sm leading-relaxed max-w-md mx-auto">
+          We stand behind every product we make. If something doesn't work as expected, reach out and we'll take care of you — no questions asked.
+        </p>
+      </div>
+    </div>
+  </motion.div>
+);
+
 const ContactModal = ({ onClose }: { onClose: () => void }) => {
   const [form, setForm] = useState({ name: '', email: '', issue: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -1345,6 +1417,7 @@ function AppInner() {
   const [showBundles, setShowBundles] = useState(false);
   const [showSale, setShowSale] = useState(false);
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [bannerVisible, setBannerVisible] = useState(true);
   const [checkoutStatus, setCheckoutStatus] = useState<'success' | 'cancelled' | null>(null);
   const [cookieConsent, setCookieConsent] = useState<boolean>(() => localStorage.getItem('cookie-consent') === 'true');
@@ -1361,12 +1434,13 @@ function AppInner() {
     if (status === 'cancelled') { setCheckoutStatus('cancelled'); window.history.replaceState({}, '', '/'); }
   }, []);
 
-  const clearPages = () => { setActiveConcernId(null); setActiveProductId(null); setShowBundles(false); setShowSale(false); setShowAllProducts(false); };
+  const clearPages = () => { setActiveConcernId(null); setActiveProductId(null); setShowBundles(false); setShowSale(false); setShowAllProducts(false); setShowAbout(false); };
   const goHome = () => { clearPages(); window.scrollTo({ top: 0 }); };
   const handleSelectConcern = (id: string) => { clearPages(); setActiveConcernId(id); window.scrollTo({ top: 0 }); };
   const handleShowBundles = () => { clearPages(); setShowBundles(true); window.scrollTo({ top: 0 }); };
   const handleShowSale = () => { clearPages(); setShowSale(true); window.scrollTo({ top: 0 }); };
   const handleShowAllProducts = () => { clearPages(); setShowAllProducts(true); window.scrollTo({ top: 0 }); };
+  const handleShowAbout = () => { clearPages(); setShowAbout(true); window.scrollTo({ top: 0 }); };
 
   return (
     <div className="min-h-screen selection:bg-beige-200">
@@ -1387,7 +1461,7 @@ function AppInner() {
         )}
       </AnimatePresence>
       {bannerVisible && <SaleBanner onViewSale={handleShowSale} onHide={() => setBannerVisible(false)} />}
-      <Navbar onHome={goHome} onSelectConcern={handleSelectConcern} onShowSale={handleShowSale} />
+      <Navbar onHome={goHome} onSelectConcern={handleSelectConcern} onShowSale={handleShowSale} onShowAbout={handleShowAbout} />
       {activeProduct ? (
         <ProductPage product={activeProduct} onBack={() => setActiveProductId(null)} />
       ) : showAllProducts ? (
@@ -1396,6 +1470,8 @@ function AppInner() {
         <SalePage onBack={goHome} onSelectProduct={(id) => { setShowSale(false); setActiveProductId(id); }} />
       ) : showBundles ? (
         <BundlesPage onBack={goHome} onSelectProduct={(id) => { setShowBundles(false); setActiveProductId(id); }} />
+      ) : showAbout ? (
+        <AboutPage onBack={goHome} />
       ) : activeConcern ? (
         <ConcernProductsPage concern={activeConcern} onBack={() => setActiveConcernId(null)} onSelectProduct={setActiveProductId} />
       ) : (
