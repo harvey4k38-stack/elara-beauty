@@ -511,7 +511,7 @@ const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void
             <h2 className="text-4xl md:text-5xl font-serif leading-tight">Glazing Milk</h2>
             <div className="flex items-center gap-3">
               <StarRating rating={4.9} />
-              <span className="text-sm text-neutral-500">4.9 · Over 2,000 five-star reviews</span>
+              <span className="text-sm text-neutral-500">4.9 · 76 reviews</span>
             </div>
             <p className="text-neutral-600 leading-relaxed text-lg">
               The product that started it all. Our Glazing Milk delivers an intense wave of hydration that leaves skin looking lit-from-within — silky, bouncy, and effortlessly glowing.
