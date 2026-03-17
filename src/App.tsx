@@ -486,7 +486,12 @@ const Hero = ({ onShopNow }: { onShopNow: () => void }) => (
 const HeroProductCard = ({ productId, badge, onSelectProduct }: { productId: string; badge: string; onSelectProduct: (id: string) => void }) => {
   const product = PRODUCTS.find(p => p.id === productId)!;
   const salePrice = getSalePrice(product)!;
-  const { rating, count } = getProductRating(productId);
+  const defaultRating = getProductRating(productId);
+  const heroOverrides: Record<string, { rating: number; count: number }> = {
+    '1': { rating: 5.0, count: 28 },
+    '41': { rating: 4.8, count: 23 },
+  };
+  const { rating, count } = heroOverrides[productId] ?? defaultRating;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
