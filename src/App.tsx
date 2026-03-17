@@ -62,7 +62,7 @@ const SALE_DISCOUNTS: Record<string, number> = {
   '9': 1, '10': 1, '11': 1, '12': 1, '13': 1, '14': 1, '15': 1, '16': 1,
   '17': 1, '18': 1, '19': 1, '20': 1, '21': 1, '22': 1, '23': 1, '24': 1,
   '25': 1, '26': 1, '27': 1, '28': 1, '29': 1, '30': 1, '31': 1, '32': 1,
-  '33': 1, '34': 1, '35': 1, '36': 1, '37': 1, '38': 1, '39': 1, '40': 1,
+  '33': 1, '34': 1, '35': 1, '36': 1, '37': 1, '38': 1, '39': 1, '40': 1, '41': 1,
 };
 
 const SALE_PRICE_OVERRIDES: Record<string, number> = {
@@ -76,6 +76,7 @@ const SALE_PRICE_OVERRIDES: Record<string, number> = {
   '29': 15.99, '30': 15.99, '31': 17.99, '32': 16.99,
   '33': 18.99, '34': 19.99, '35': 17.99, '36': 16.99,
   '37': 19.99, '38': 13.99, '39': 18.99, '40': 19.99,
+  '41': 16.99,
 };
 
 const getSalePrice = (product: { id: string; price: number }) => {
@@ -482,52 +483,56 @@ const Hero = ({ onShopNow }: { onShopNow: () => void }) => (
   </section>
 );
 
-const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void }) => {
-  const product = PRODUCTS.find(p => p.id === '1')!;
+const HeroProductCard = ({ productId, badge, onSelectProduct }: { productId: string; badge: string; onSelectProduct: (id: string) => void }) => {
+  const product = PRODUCTS.find(p => p.id === productId)!;
   const salePrice = getSalePrice(product)!;
+  const { rating, count } = getProductRating(productId);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="flex flex-col sm:flex-row gap-6 items-center bg-beige-50 rounded-[32px] p-6"
+    >
+      <div className="relative w-36 shrink-0 cursor-pointer" onClick={() => onSelectProduct(productId)}>
+        <div className="aspect-square rounded-[24px] overflow-hidden bg-white flex items-center justify-center p-4">
+          <img src={product.image} alt={product.name} className="w-full h-full object-contain hover:scale-105 transition-transform duration-700" />
+        </div>
+        <div className="absolute top-2 left-2 bg-neutral-900 text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded-full whitespace-nowrap">
+          {badge}
+        </div>
+      </div>
+      <div className="space-y-2 text-center sm:text-left">
+        <p className="text-[10px] uppercase tracking-widest text-neutral-400">{product.category}</p>
+        <h3 className="text-2xl font-serif">{product.name}</h3>
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
+          <StarRating rating={rating} />
+          <span className="text-xs text-neutral-500">{rating.toFixed(1)} · {count} reviews</span>
+        </div>
+        <div className="flex items-baseline gap-2 justify-center sm:justify-start">
+          <span className="text-xl font-light">£{salePrice.toFixed(2)}</span>
+          <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+          <span className="text-[10px] font-bold bg-[#b8976a] text-white px-2 py-0.5 rounded-full">-{getDisplayDiscount(product)}%</span>
+        </div>
+        <button
+          onClick={() => onSelectProduct(productId)}
+          className="mt-1 px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
+        >
+          Shop Now
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
+const BestSeller = ({ onSelectProduct }: { onSelectProduct: (id: string) => void }) => {
   return (
     <section className="py-12 bg-white">
-      <div className="max-w-4xl mx-auto px-6">
-        <div className="flex flex-col sm:flex-row gap-8 items-center">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative w-48 shrink-0 cursor-pointer"
-            onClick={() => onSelectProduct('1')}
-          >
-            <div className="aspect-square rounded-[32px] overflow-hidden bg-beige-100 flex items-center justify-center p-6">
-              <img src="/products/glazing-milk.png" alt="Glazing Milk" className="w-full h-full object-contain hover:scale-105 transition-transform duration-700" />
-            </div>
-            <div className="absolute top-3 left-3 bg-neutral-900 text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded-full">
-              #1 Best Seller
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-3"
-          >
-            <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400">Our Hero Product</p>
-            <h2 className="text-3xl font-serif">Glazing Milk</h2>
-            <div className="flex items-center gap-2">
-              <StarRating rating={4.9} />
-              <span className="text-sm text-neutral-500">4.9 · 76 reviews</span>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-light">£{salePrice.toFixed(2)}</span>
-              <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
-              <span className="text-xs font-bold bg-[#b8976a] text-white px-2 py-0.5 rounded-full">-{getDisplayDiscount(product)}%</span>
-            </div>
-            <button
-              onClick={() => onSelectProduct('1')}
-              className="px-8 py-3 rounded-full text-xs uppercase tracking-widest font-medium bg-neutral-900 text-white hover:bg-neutral-800 transition-colors"
-            >
-              Shop Now
-            </button>
-          </motion.div>
+      <div className="max-w-5xl mx-auto px-6">
+        <p className="text-xs uppercase tracking-[0.3em] font-medium text-neutral-400 mb-6 text-center">Our Hero Products</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <HeroProductCard productId="1" badge="#1 Best Seller" onSelectProduct={onSelectProduct} />
+          <HeroProductCard productId="41" badge="Acne Solution" onSelectProduct={onSelectProduct} />
         </div>
       </div>
     </section>

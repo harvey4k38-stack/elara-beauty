@@ -341,6 +341,15 @@ export const PRODUCTS: Product[] = [
     price: 51.99,
     image: '/products/lifting-eye-contour.png',
     concern: ['eye-care', 'aging']
+  },
+  // Acne
+  {
+    id: '41',
+    name: 'Clarity BHA Serum',
+    category: 'Serum',
+    price: 43.99,
+    image: '/products/clarity-bha-serum.png',
+    concern: ['acne', 'dullness']
   }
 ];
 
