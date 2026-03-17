@@ -76,7 +76,7 @@ const SALE_PRICE_OVERRIDES: Record<string, number> = {
   '29': 15.99, '30': 15.99, '31': 17.99, '32': 16.99,
   '33': 18.99, '34': 19.99, '35': 17.99, '36': 16.99,
   '37': 19.99, '38': 13.99, '39': 18.99, '40': 19.99,
-  '41': 16.99,
+  '41': 11.99,
 };
 
 const getSalePrice = (product: { id: string; price: number }) => {
