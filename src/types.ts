@@ -345,7 +345,7 @@ export const PRODUCTS: Product[] = [
   // Acne
   {
     id: '41',
-    name: 'Clarity BHA Serum',
+    name: 'Zero Pore Clearing Serum',
     category: 'Serum',
     price: 43.99,
     image: '/products/clarity-bha-serum.png',
