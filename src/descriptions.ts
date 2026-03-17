@@ -200,6 +200,11 @@ export const DESCRIPTIONS: Record<string, ProductDescription> = {
     body: 'Designed specifically for the appearance of persistent dark circles, this targeted corrector works beneath the surface to visibly lighten and brighten the under-eye area over time. Its silky, precise formula blends effortlessly into the skin, creating an immediate brightening effect while working long-term to address discolouration at its source. Confidence in a single, elegant stroke.',
     benefits: ['Immediately brightens and corrects the under-eye area', 'Targets the appearance of persistent dark circles', 'Silky, blendable texture for precise application', 'Suitable for all skin tones', 'Long-term brightening results with consistent use'],
   },
+  '42': {
+    hook: 'Turn back time — visibly, luxuriously, unapologetically.',
+    body: 'The Pro-Age Restorative Cream is Elara Beauty\'s most powerful anti-ageing formula — a rich, velvety cream engineered to target fine lines, deep wrinkles, and loss of firmness all at once. Its advanced complex penetrates deep into the skin\'s surface, stimulating the appearance of renewed elasticity and restoring the plump, lifted contours of younger-looking skin. With every use, the complexion appears smoother, firmer, and visibly more youthful. This is luxury skincare that delivers.',
+    benefits: ['Visibly reduces the appearance of fine lines and deep wrinkles', 'Firms and lifts for a more youthful, sculpted complexion', 'Restores elasticity and skin density over time', 'Intensely nourishes without feeling heavy or greasy', 'Suitable for mature, dry, and ageing-concerned skin'],
+  },
   '40': {
     hook: 'Sculpted. Defined. Visibly lifted.',
     body: 'The most prestige step in the Elara Beauty eye care collection, the Lifting Eye Contour is a transformative treatment designed to redefine and sculpt the entire eye area. Its opulent, silky cream melts into skin on contact, delivering an immediate tightening sensation that visibly lifts and firms the eye contour. Fine lines smooth, skin firms, and the eyes take on a beautifully sculpted, youthful definition.',

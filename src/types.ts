@@ -350,6 +350,14 @@ export const PRODUCTS: Product[] = [
     price: 43.99,
     image: '/products/clarity-bha-serum.png',
     concern: ['acne', 'dullness']
+  },
+  {
+    id: '42',
+    name: 'Pro-Age Restorative Cream',
+    category: 'Moisturizer',
+    price: 54.99,
+    image: '/products/pro-age-restorative-cream.png',
+    concern: ['aging', 'dryness']
   }
 ];
 
