@@ -182,8 +182,8 @@ export const DESCRIPTIONS: Record<string, ProductDescription> = {
   },
   '36': {
     hook: 'A five-minute luxury ritual your eyes deserve.',
-    body: 'These gold-infused eye patches are the ultimate indulgence for a tired, puffy eye area. In just five minutes, they visibly reduce swelling, brighten dark circles, and leave the under-eye area looking smoother and more awake. Whether used before an event or as a weekly ritual, the effect is immediate, visible, and deeply satisfying.',
-    benefits: ['Visibly reduces puffiness in minutes', 'Brightens and refreshes the under-eye area', 'Instantly smooths and plumps the skin beneath the eyes', 'Luxurious gold-foil finish for an elevated ritual', 'Perfect for pre-event prep or weekly self-care'],
+    body: 'These gold-infused eye patches are the ultimate indulgence for a tired, puffy eye area. Each box contains 16 patches — 8 pairs of under-eye treatments ready to use whenever your eyes need it most. In just five minutes, they visibly reduce swelling, brighten dark circles, and leave the under-eye area looking smoother and more awake. Whether used before an event or as a weekly ritual, the effect is immediate, visible, and deeply satisfying.',
+    benefits: ['16 patches included (8 pairs) per box', 'Visibly reduces puffiness in minutes', 'Brightens and refreshes the under-eye area', 'Instantly smooths and plumps the skin beneath the eyes', 'Luxurious gold-foil finish for an elevated ritual', 'Perfect for pre-event prep or weekly self-care'],
   },
   '37': {
     hook: 'Turn back time — one eye at a time.',
