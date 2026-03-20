@@ -988,6 +988,10 @@ const MODAL_CONTENT: Record<string, { title: string; body: React.ReactNode }> = 
           <p>All content on this site — including images, copy, and branding — is the property of Elara Beauty and may not be reproduced without written permission.</p>
         </div>
         <div>
+          <p className="font-semibold text-neutral-900 mb-2">Product Packaging</p>
+          <p>Product packaging may vary from images shown on this website. While we strive to keep imagery up to date, packaging design and presentation may differ from what you receive. The product inside remains the same.</p>
+        </div>
+        <div>
           <p className="font-semibold text-neutral-900 mb-2">Governing Law</p>
           <p>These terms are governed by the laws of England and Wales.</p>
         </div>
