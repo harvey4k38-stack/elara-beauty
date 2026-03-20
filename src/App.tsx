@@ -55,6 +55,26 @@ const CartProvider = ({ children }: { children: React.ReactNode }) => {
   return <CartContext.Provider value={{ items, add, remove, update, clear, total, count }}>{children}</CartContext.Provider>;
 };
 
+// --- Currency ---
+const CURRENCIES: Record<string, { symbol: string; rate: number; label: string }> = {
+  GBP: { symbol: '£', rate: 1,    label: '£ GBP' },
+  USD: { symbol: '$', rate: 1.27, label: '$ USD' },
+  EUR: { symbol: '€', rate: 1.18, label: '€ EUR' },
+  CAD: { symbol: 'CA$', rate: 1.75, label: 'CA$ CAD' },
+  AUD: { symbol: 'A$', rate: 2.00, label: 'A$ AUD' },
+};
+interface CurrencyContextType { currency: string; setCurrency: (c: string) => void; formatPrice: (gbp: number) => string; }
+const CurrencyContext = createContext<CurrencyContextType>({} as CurrencyContextType);
+const useCurrency = () => useContext(CurrencyContext);
+const CurrencyProvider = ({ children }: { children: React.ReactNode }) => {
+  const [currency, setCurrency] = useState('GBP');
+  const formatPrice = (gbp: number) => {
+    const { symbol, rate } = CURRENCIES[currency];
+    return `${symbol}${(gbp * rate).toFixed(2)}`;
+  };
+  return <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice }}>{children}</CurrencyContext.Provider>;
+};
+
 // --- Sale Data ---
 // All products on sale — SALE_DISCOUNTS marks them as sale items (value used as fallback only)
 const SALE_DISCOUNTS: Record<string, number> = {
@@ -98,6 +118,7 @@ const getDisplayDiscount = (product: { id: string; price: number }) => {
 
 const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   const { items, remove, update, total, count } = useCart();
+  const { formatPrice } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -161,7 +182,7 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium leading-snug">{item.name}</p>
-                    <p className="text-sm text-neutral-500 mt-0.5">£{item.price.toFixed(2)}</p>
+                    <p className="text-sm text-neutral-500 mt-0.5">{formatPrice(item.price)}</p>
                     <div className="flex items-center gap-3 mt-3">
                       <button onClick={() => update(item.id, item.quantity - 1)} className="w-7 h-7 rounded-full border border-neutral-200 flex items-center justify-center hover:bg-neutral-100 transition-colors">
                         <Minus className="w-3 h-3" />
@@ -181,7 +202,7 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
             <div className="px-6 py-6 border-t border-neutral-100 space-y-4">
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Subtotal</span>
-                <span className="font-medium">£{total.toFixed(2)}</span>
+                <span className="font-medium">{formatPrice(total)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Delivery</span>
@@ -189,7 +210,7 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
               </div>
               <div className="flex justify-between font-medium border-t border-neutral-100 pt-4">
                 <span>Total</span>
-                <span>£{total.toFixed(2)}</span>
+                <span>{formatPrice(total)}</span>
               </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
               <button
@@ -209,6 +230,7 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
 
 const SearchOverlay = ({ onClose, onSelectConcern }: { onClose: () => void; onSelectConcern: (id: string) => void }) => {
   const [query, setQuery] = useState('');
+  const { formatPrice } = useCurrency();
   const results = query.trim().length > 0
     ? PRODUCTS.filter(p =>
         p.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -260,7 +282,7 @@ const SearchOverlay = ({ onClose, onSelectConcern }: { onClose: () => void; onSe
               />
               <div>
                 <p className="font-medium">{product.name}</p>
-                <p className="text-xs text-neutral-400 uppercase tracking-widest mt-0.5">{product.category} — £{product.price.toFixed(2)}</p>
+                <p className="text-xs text-neutral-400 uppercase tracking-widest mt-0.5">{product.category} — {formatPrice(product.price)}</p>
               </div>
             </button>
           ))}
@@ -284,6 +306,21 @@ const SaleBanner = ({ onViewSale, onHide }: { onViewSale: () => void; onHide: ()
         <X className="w-4 h-4" />
       </button>
     </div>
+  );
+};
+
+const CurrencySelector = () => {
+  const { currency, setCurrency } = useCurrency();
+  return (
+    <select
+      value={currency}
+      onChange={e => setCurrency(e.target.value)}
+      className="text-xs uppercase tracking-widest font-medium bg-transparent border border-neutral-200 rounded-full px-3 py-1.5 cursor-pointer hover:border-neutral-400 transition-colors focus:outline-none"
+    >
+      {Object.entries(CURRENCIES).map(([code, { label }]) => (
+        <option key={code} value={code}>{label}</option>
+      ))}
+    </select>
   );
 };
 
@@ -314,7 +351,8 @@ const Navbar = ({ onHome, onSelectConcern, onShowSale, onShowAbout }: { onHome: 
             ELARA BEAUTY
           </button>
 
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
+            <div className="hidden sm:block"><CurrencySelector /></div>
             <button onClick={() => setIsSearchOpen(true)} className="hover:opacity-50 transition-opacity">
               <Search className="w-5 h-5" />
             </button>
@@ -370,6 +408,7 @@ const AllProductsPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSe
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const categories = ['All', ...Array.from(new Set(PRODUCTS.map(p => p.category)))];
   const filtered = activeCategory === 'All' ? PRODUCTS : PRODUCTS.filter(p => p.category === activeCategory);
+  const { formatPrice } = useCurrency();
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-12 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -419,11 +458,11 @@ const AllProductsPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSe
                   <h3 className="text-base font-medium">{product.name}</h3>
                   {salePrice ? (
                     <div className="flex items-baseline gap-2">
-                      <span className="text-sm font-medium">£{salePrice.toFixed(2)}</span>
-                      <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+                      <span className="text-sm font-medium">{formatPrice(salePrice)}</span>
+                      <span className="text-sm text-neutral-400 line-through">{formatPrice(product.price)}</span>
                     </div>
                   ) : (
-                    <p className="text-sm text-neutral-600">£{product.price.toFixed(2)}</p>
+                    <p className="text-sm text-neutral-600">{formatPrice(product.price)}</p>
                   )}
                 </div>
               </motion.div>
@@ -488,6 +527,7 @@ const HeroProductCard = ({ productId, badge, onSelectProduct }: { productId: str
   const product = PRODUCTS.find(p => p.id === productId)!;
   const salePrice = getSalePrice(product)!;
   const defaultRating = getProductRating(productId);
+  const { formatPrice } = useCurrency();
   const heroOverrides: Record<string, { rating: number; count: number }> = {
     '1': { rating: 5.0, count: 28 },
     '41': { rating: 4.8, count: 23 },
@@ -516,8 +556,8 @@ const HeroProductCard = ({ productId, badge, onSelectProduct }: { productId: str
           <span className="text-xs text-neutral-500">{rating.toFixed(1)} · {count} reviews</span>
         </div>
         <div className="flex items-baseline gap-2 justify-center sm:justify-start">
-          <span className="text-xl font-light">£{salePrice.toFixed(2)}</span>
-          <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+          <span className="text-xl font-light">{formatPrice(salePrice)}</span>
+          <span className="text-sm text-neutral-400 line-through">{formatPrice(product.price)}</span>
           <span className="text-[10px] font-bold bg-[#b8976a] text-white px-2 py-0.5 rounded-full">-{getDisplayDiscount(product)}%</span>
         </div>
         <button
@@ -623,6 +663,7 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
   const salePrice = getSalePrice(product);
   const discount = getDisplayDiscount(product);
   const { add } = useCart();
+  const { formatPrice } = useCurrency();
   const [added, setAdded] = useState(false);
   const handleAdd = () => {
     add(product, salePrice ?? product.price);
@@ -662,12 +703,12 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
             </div>
             {salePrice ? (
               <div className="flex items-baseline gap-3 mb-8">
-                <span className="text-2xl font-light text-neutral-900">£{salePrice.toFixed(2)}</span>
-                <span className="text-lg text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+                <span className="text-2xl font-light text-neutral-900">{formatPrice(salePrice)}</span>
+                <span className="text-lg text-neutral-400 line-through">{formatPrice(product.price)}</span>
                 <span className="text-xs font-bold bg-neutral-900 text-white px-2.5 py-1 rounded-full">-{discount}%</span>
               </div>
             ) : (
-              <p className="text-2xl font-light text-neutral-700 mb-8">£{product.price.toFixed(2)}</p>
+              <p className="text-2xl font-light text-neutral-700 mb-8">{formatPrice(product.price)}</p>
             )}
 
             {desc && (
@@ -696,7 +737,7 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
               onClick={handleAdd}
               className={`w-full py-5 rounded-full text-xs uppercase tracking-widest font-medium transition-colors ${added ? 'bg-[#b8976a] text-white' : 'bg-neutral-900 text-white hover:bg-neutral-800'}`}
             >
-              {added ? 'Added to Bag ✓' : `Add to Bag — £${(salePrice ?? product.price).toFixed(2)}`}
+              {added ? 'Added to Bag ✓' : <>Add to Bag — {formatPrice(salePrice ?? product.price)}</>}
             </button>
           </div>
         </div>
@@ -707,6 +748,7 @@ const ProductPage = ({ product, onBack }: { product: Product; onBack: () => void
 
 const ConcernProductsPage = ({ concern, onBack, onSelectProduct }: { concern: Concern; onBack: () => void; onSelectProduct: (id: string) => void }) => {
   const products = PRODUCTS.filter(p => p.concern.includes(concern.id));
+  const { formatPrice } = useCurrency();
   return (
     <div className="min-h-screen pt-12 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -749,11 +791,11 @@ const ConcernProductsPage = ({ concern, onBack, onSelectProduct }: { concern: Co
                 <h3 className="text-lg font-medium">{product.name}</h3>
                 {getSalePrice(product) ? (
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-medium">£{getSalePrice(product)!.toFixed(2)}</span>
-                    <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+                    <span className="text-sm font-medium">{formatPrice(getSalePrice(product)!)}</span>
+                    <span className="text-sm text-neutral-400 line-through">{formatPrice(product.price)}</span>
                   </div>
                 ) : (
-                  <p className="text-sm text-neutral-600">£{product.price.toFixed(2)}</p>
+                  <p className="text-sm text-neutral-600">{formatPrice(product.price)}</p>
                 )}
               </div>
             </motion.div>
@@ -1056,6 +1098,7 @@ const BUNDLES = [
 
 const SalePage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectProduct: (id: string) => void }) => {
   const saleProducts = PRODUCTS.filter(p => SALE_DISCOUNTS[p.id]);
+  const { formatPrice } = useCurrency();
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen pt-12 pb-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -1093,8 +1136,8 @@ const SalePage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectPro
                   <p className="text-[10px] uppercase tracking-widest text-neutral-400">{product.category}</p>
                   <h3 className="text-lg font-medium">{product.name}</h3>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-medium text-neutral-900">£{salePrice.toFixed(2)}</span>
-                    <span className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</span>
+                    <span className="text-sm font-medium text-neutral-900">{formatPrice(salePrice)}</span>
+                    <span className="text-sm text-neutral-400 line-through">{formatPrice(product.price)}</span>
                   </div>
                 </div>
               </motion.div>
@@ -1108,6 +1151,7 @@ const SalePage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectPro
 
 const BundlesPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelectProduct: (id: string) => void }) => {
   const { add } = useCart();
+  const { formatPrice } = useCurrency();
   const [addedBundle, setAddedBundle] = useState<string | null>(null);
 
   const handleAddBundle = (bundle: typeof BUNDLES[0]) => {
@@ -1148,7 +1192,7 @@ const BundlesPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelect
                     <h2 className="text-2xl font-serif mb-1">{bundle.name}</h2>
                     <p className="text-sm text-neutral-500">{bundle.tagline}</p>
                   </div>
-                  <span className="text-xs font-medium bg-[#f5ede0] text-[#b8976a] px-3 py-1.5 rounded-full whitespace-nowrap">Save £{bundle.saving}</span>
+                  <span className="text-xs font-medium bg-[#f5ede0] text-[#b8976a] px-3 py-1.5 rounded-full whitespace-nowrap">Save {formatPrice(bundle.saving)}</span>
                 </div>
                 <div className="space-y-3 mb-8">
                   {products.map(product => (
@@ -1164,7 +1208,7 @@ const BundlesPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelect
                         <p className="text-sm font-medium group-hover:opacity-60 transition-opacity">{product.name}</p>
                         <p className="text-xs text-neutral-400">{product.category}</p>
                       </div>
-                      <p className="text-sm text-neutral-400 line-through">£{product.price.toFixed(2)}</p>
+                      <p className="text-sm text-neutral-400 line-through">{formatPrice(product.price)}</p>
                     </button>
                   ))}
                 </div>
@@ -1172,8 +1216,8 @@ const BundlesPage = ({ onBack, onSelectProduct }: { onBack: () => void; onSelect
                   <div>
                     <p className="text-xs uppercase tracking-widest text-neutral-400 mb-1">Bundle Price</p>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-light">£{bundlePrice.toFixed(2)}</span>
-                      <span className="text-sm text-neutral-400 line-through">£{originalTotal.toFixed(2)}</span>
+                      <span className="text-2xl font-light">{formatPrice(bundlePrice)}</span>
+                      <span className="text-sm text-neutral-400 line-through">{formatPrice(originalTotal)}</span>
                     </div>
                   </div>
                   <button
@@ -1578,5 +1622,5 @@ function AppInner() {
 }
 
 export default function App() {
-  return <CartProvider><AppInner /></CartProvider>;
+  return <CurrencyProvider><CartProvider><AppInner /></CartProvider></CurrencyProvider>;
 }
