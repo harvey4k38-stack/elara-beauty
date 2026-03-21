@@ -916,12 +916,12 @@ const Newsletter = () => {
       <div className="max-w-5xl mx-auto bg-beige-100 rounded-[40px] py-20 px-8 text-center">
         <h2 className="text-3xl md:text-4xl mb-6">Join the Community</h2>
         <p className="text-neutral-600 mb-10 max-w-md mx-auto">
-          Sign up for exclusive product launches, skincare tips, and 10% off your first order.
+          Sign up for exclusive product launches, skincare tips, and early access to new arrivals.
         </p>
         {status === 'success' ? (
           <div className="space-y-2">
             <p className="text-lg font-serif text-neutral-800">You're in — welcome to Elara Beauty.</p>
-            <p className="text-sm text-neutral-500">Check your inbox for your 10% off code: <strong>WELCOME10</strong></p>
+            <p className="text-sm text-neutral-500">You'll be the first to know about new launches and exclusive offers.</p>
           </div>
         ) : (
           <form className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto" onSubmit={handleSubmit}>
