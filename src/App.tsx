@@ -116,19 +116,42 @@ const getDisplayDiscount = (product: { id: string; price: number }) => {
 
 // --- Components ---
 
+const PROMO_CODES: Record<string, number> = { 'EYE20': 20 };
+
 const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   const { items, remove, update, total, count } = useCart();
   const { formatPrice } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [promoInput, setPromoInput] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState('');
+
+  const discountPct = appliedPromo ? PROMO_CODES[appliedPromo] : 0;
+  const discountAmount = total * (discountPct / 100);
+  const finalTotal = total - discountAmount;
+
+  const applyPromo = () => {
+    const code = promoInput.trim().toUpperCase();
+    if (PROMO_CODES[code]) {
+      setAppliedPromo(code);
+      setPromoError('');
+      setPromoInput('');
+    } else {
+      setPromoError('Invalid discount code.');
+    }
+  };
 
   const handleCheckout = async () => {
     setLoading(true); setError('');
+    const checkoutItems = appliedPromo
+      ? items.map(i => ({ ...i, price: +(i.price * (1 - discountPct / 100)).toFixed(2) }))
+      : items;
     try {
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items: checkoutItems }),
       });
       const text = await res.text();
       let data: any;
@@ -200,17 +223,42 @@ const CartDrawer = ({ onClose }: { onClose: () => void }) => {
               ))}
             </div>
             <div className="px-6 py-6 border-t border-neutral-100 space-y-4">
+              {appliedPromo ? (
+                <div className="flex items-center justify-between bg-[#f5ede0] rounded-xl px-4 py-2.5">
+                  <span className="text-xs font-medium text-[#b8976a] uppercase tracking-widest">{appliedPromo} — {discountPct}% off applied</span>
+                  <button onClick={() => setAppliedPromo(null)} className="text-neutral-400 hover:text-neutral-600 transition-colors"><X className="w-3.5 h-3.5" /></button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Discount code"
+                    value={promoInput}
+                    onChange={e => { setPromoInput(e.target.value); setPromoError(''); }}
+                    onKeyDown={e => e.key === 'Enter' && applyPromo()}
+                    className="flex-1 border border-neutral-200 rounded-full px-4 py-2 text-xs uppercase tracking-widest focus:outline-none focus:border-neutral-400"
+                  />
+                  <button onClick={applyPromo} className="px-4 py-2 bg-neutral-900 text-white rounded-full text-xs uppercase tracking-widest font-medium hover:bg-neutral-800 transition-colors">Apply</button>
+                </div>
+              )}
+              {promoError && <p className="text-xs text-red-500">{promoError}</p>}
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Subtotal</span>
                 <span className="font-medium">{formatPrice(total)}</span>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-500">Discount ({discountPct}%)</span>
+                  <span className="font-medium text-[#b8976a]">−{formatPrice(discountAmount)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-neutral-500">Delivery</span>
                 <span className="font-medium text-[#b8976a]">Free</span>
               </div>
               <div className="flex justify-between font-medium border-t border-neutral-100 pt-4">
                 <span>Total</span>
-                <span>{formatPrice(total)}</span>
+                <span>{formatPrice(finalTotal)}</span>
               </div>
               {error && <p className="text-xs text-red-500">{error}</p>}
               <button
